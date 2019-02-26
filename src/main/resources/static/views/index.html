@@ -1,0 +1,187 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        #wrapper {
+            font-family: verdana;
+            margin: 30px auto;
+            padding: 30px;
+            background: #4D6879; /* You can change the main color of thew form here. */
+            font-size: 14px;
+            width: 100%;
+            max-width: 700px;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            font-size: 24px;
+            padding: 13px 0;
+            color: #fff;
+            text-shadow: 1px 1px 1px #666;
+        }
+
+        input {
+            height: 18px;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            -webkit-border-radius: 6px;
+            -khtml-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-box-shadow: 0 0 10px #444;
+            -moz-box-shadow: 0 0 10px #444;
+            box-shadow: 0 0 10px #444;
+            border: 1px solid #fff;
+        }
+
+        textarea {
+            height: 150px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            border: 1px solid #fff;
+            -webkit-border-radius: 6px;
+            -khtml-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-box-shadow: 0 0 10px #444;
+            -moz-box-shadow: 0 0 10px #444;
+            box-shadow: 0 0 10px #444;
+        }
+
+        input[type="text"]:hover, textarea:hover {
+            border: 1px solid #fff;
+            -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.25) inset, 0 0 5px rgba(255, 255, 255, 0.4);
+            -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.25) inset, 0 0 5px rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.25) inset, 0 0 5px rgba(255, 255, 255, 0.4);
+        }
+
+        input#submit {
+            text-align: center;
+            color: #fff;
+            height: 50px;
+            padding: 0;
+            text-shadow: 1px 1px 1px #000;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-top: 50px;
+            border: 1px solid #000;
+            background: #000;
+            background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3b3b3b), color-stop(100%, #000000));
+            background: -webkit-linear-gradient(top, #3b3b3b 0%, #000000 100%);
+            background: -moz-linear-gradient(top, #3b3b3b 0%, #000000 100%);
+            background: -o-linear-gradient(top, #3b3b3b 0%, #000000 100%);
+            background: -ms-linear-gradient(top, #3b3b3b 0%, #000000 100%);
+            background: linear-gradient(top, #3b3b3b 0%, #000000 100%);
+            opacity: 0.5;
+        }
+
+        input#submit:hover {
+            color: #ccc;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        label {
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        select {
+            height: 45px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <form id="device-form" onsubmit="return false">
+        <label for="CustomerID">CustomerID</label>
+        <input type="text" id="customerId" name="customerId" placeholder="UUID type"/>
+
+        <label for="type">Type</label>
+        <!--<input type="text" id="type" name="type"/>-->
+        <select name="type">
+            <option value="mobile">MOBILE</option>
+            <option value="computer">COMPUTER</option>
+            <option value="server">SERVER</option>
+            <option value="security_vm">SECURITY_VM</option>
+            <option value="utm">UTM</option>
+            <option value="access_point">ACCESS_POINT</option>
+            <option value="wireless_network">WIRELESS_NETWORK</option>
+            <option value="mailbox">MAILBOX</option>
+            <option value="slec">SLEC</option>
+            <option value="xgfirewall">XGFIREWALL</option>
+        </select>
+
+        <label for="label">Label</label>
+        <input type="text" id="label" name="label"/>
+
+        <label for="ipAddresses">IpAddresses</label>
+        <input type="text" id="ipAddresses" name="ipAddresses"/>
+
+        <label for="macAddresses">macAddresses</label>
+        <input type="text" id="macAddresses" name="macAddresses"/>
+
+        <label for="eventType">EventType</label>
+        <!--<input type="text" id="eventType" name="eventType"/>-->
+        <select name="eventType">
+            <option value="created">CREATED</option>
+            <option value="updated">UPDATED</option>
+            <option value="deleted">DELETED</option>
+            <option value="undeleted">UNDELETED</option>
+        </select>
+
+        <input type="submit" value="Send" name="submit" id="submit"/>
+    </form>
+</div>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $(document).ready(function () {
+            $('#submit').click(function () {
+                var formData = $('#device-form').serializeArray();
+                console.log(formData);
+                var eventType = "created";
+                var deviceCons = {};
+                for (i in formData) {
+                    if (formData[i].name == "eventType") {
+                        eventType = formData[i].value;
+                        continue;
+                    } else if (formData[i].name == "ipAddresses" || formData[i].name == "macAddresses") {
+                        deviceCons[formData[i].name] = formData[i].value.split(",");
+                    } else {
+                        deviceCons[formData[i].name] = formData[i].value;
+                    }
+                }
+
+                console.log(deviceCons);
+                if (Object.keys(deviceCons).length > 0) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/deviceDataCons?eventType=" + eventType,
+                        data: JSON.stringify(deviceCons),
+                        crossDomain: true,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        complete: function (xhr, statusText) {
+                            if (xhr.status == 200) {
+                                console.log(xhr.responseJSON);
+                                //alert(xhr.responseJSON);
+                            }
+                        }
+                    });
+
+                } else {
+                    alert("##### please fill all the data #####");
+                }
+            })
+        })
+    });
+</script>
+</body>
+
+</html>
