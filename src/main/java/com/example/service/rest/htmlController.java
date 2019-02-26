@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 public class htmlController {
 
-    @RequestMapping(path = "/greet", method = RequestMethod.GET)
+    @RequestMapping(path = "/publishToCons", method = RequestMethod.GET)
     public String index() {
         return "index";
     }

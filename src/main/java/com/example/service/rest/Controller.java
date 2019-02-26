@@ -4,8 +4,7 @@ import com.example.service.Entities.AssetEntity;
 import com.example.service.domain.EventMessage;
 import com.example.service.sns.SnsPublisher;
 import com.example.service.sns.SnsSubscriber;
-import com.example.service.sqs.SqsPublisher;
-import com.example.service.sqs.SqsSubscriber;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,26 +20,12 @@ import java.util.UUID;
 public class Controller {
 
     @Autowired
-    SqsPublisher sqsPublisher;
-
-    @Autowired
-    SqsSubscriber sqsSubscriber;
-
-
-    @Autowired
     SnsPublisher snsPublisher;
 
     @Autowired
     SnsSubscriber snsSubscriber;
 
-    @RequestMapping(path = "/sqs/publish", method = RequestMethod.GET)
-    public void triggerSqsPublish(@RequestParam String foo) {
 
-        sqsPublisher.send(EventMessage.builder()
-                .foo(foo)
-                .build());
-
-    }
 
     @RequestMapping(path = "/sns/publish", method = RequestMethod.GET)
     public void triggerSnsPublish(@RequestParam String foo) {
@@ -48,15 +33,16 @@ public class Controller {
         System.out.println("@@@@@@ MESSAGE TO BE SENT IS " + foo);
 
         snsPublisher.send(EventMessage.builder().foo(foo).build());
-
-        //sqsSubscriber.subscribeToSQSDirectly()
-        //snsSubscriber.subscribe();
     }
 
     @RequestMapping(path = "/snshello", method = RequestMethod.GET)
     public String snsHello() {
         return "SNS SAYS HELLO";
     }
+
+    /*
+       This is the route where the form data is submited and published to snsTopic
+    * */
 
     @RequestMapping(path = "/deviceDataCons", method = RequestMethod.POST)
     public void deviceCons(@RequestBody AssetEntity consDevice,@RequestParam String eventType) {

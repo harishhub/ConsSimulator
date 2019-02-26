@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,8 @@ public class SnsPublisher {
     @Autowired
     private NotificationMessagingTemplate notificationMessagingTemplate;
 
-    private String snsTopic = "demo1";
+    @Value("${sns.topic:}")
+    private String snsTopic;
 
     public void send(EventMessage msg) {
         this.notificationMessagingTemplate.sendNotification(snsTopic, msg, "subject");

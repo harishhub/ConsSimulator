@@ -3,9 +3,6 @@ cloud.aws.credentials.secretKey:
 cloud.aws.credentials.instanceProfile: false
 cloud.aws.region.static: us-east-1
 
-
-sqs.queue: test-topic-read
-sqs.queue.sns.fanout: test-queue-sns
 sns.topic: demo1
 
 localstack:
